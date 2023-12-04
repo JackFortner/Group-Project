@@ -98,7 +98,7 @@ def reset_entire_database():
         st.error("Database file not found.")
 def main():
     st.sidebar.title("Navigation")
-    choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation","Investment Options", "Performance Tracking"], "Reset Database")
+    choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation","Investment Options", "Performance Tracking", "Reset Database"])
 
     if choice == "Create Profile":
         create_user_profile()
