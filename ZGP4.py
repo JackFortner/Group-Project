@@ -54,13 +54,28 @@ def get_recommended_portfolio(risk_tolerance):
         return portfolios['Aggressive']
 
 def get_investment_allocation(portfolio, financial_goal, horizon):
-    allocation = {
-        'Conservative': {'Bonds': 60, 'ETFs': 30, 'Stocks': 10},
-        'Moderate': {'Bonds': 20, 'ETFs': 50, 'Stocks': 30},
-        'Aggressive': {'Bonds': 10, 'ETFs': 30, 'Stocks': 60}
+   # Define base allocations
+    base_allocation = {
+        'Conservative': {'Bonds': 70, 'ETFs': 20, 'Stocks': 10},
+        'Moderate': {'Bonds': 40, 'ETFs': 30, 'Stocks': 30},
+        'Aggressive': {'Bonds': 10, 'ETFs': 20, 'Stocks': 70}
     }
 
-    return pd.DataFrame(allocation[portfolio['name']], index=['% Allocation'])
+    # Adjust allocations based on financial goal
+    if financial_goal < 5000:  # Lower goal, more conservative
+        allocation_adjustment = {'Bonds': 10, 'ETFs': -5, 'Stocks': -5}
+    elif 5000 <= financial_goal < 20000:  # Moderate goal
+        allocation_adjustment = {'Bonds': 5, 'ETFs': 0, 'Stocks': -5}
+    else:  # Higher goal, more aggressive
+        allocation_adjustment = {'Bonds': -10, 'ETFs': 5, 'Stocks': 5}
+
+    # Apply adjustments
+    final_allocation = {
+        asset: base_allocation[portfolio['name']][asset] + allocation_adjustment.get(asset, 0)
+        for asset in base_allocation[portfolio['name']]
+    }
+
+    return pd.DataFrame(final_allocation, index=['% Allocation'])
 
 def show_investment_options():
     st.title("Popular Investment Options")
