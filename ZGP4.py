@@ -2,6 +2,7 @@ import streamlit as st
 import yfinance as yf
 import matplotlib.pyplot as plt
 import pandas as pd
+import os 
 from sqlalchemy import create_engine
 
 # Database setup (SQLite in this example)
@@ -89,10 +90,15 @@ def track_performance(ticker):
     plt.plot(hist['Close'])
     plt.title("Stock Closing Price Over Time")
     st.pyplot(plt)
-
+def reset_entire_database():
+    if os.path.exists("roboadvisor.db"):
+        os.remove("roboadvisor.db")
+        st.success("Entire database has been reset")
+    else:
+        st.error("Database file not found.")
 def main():
     st.sidebar.title("Navigation")
-    choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation","Investment Options", "Performance Tracking"])
+    choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation","Investment Options", "Performance Tracking"], "Reset Database")
 
     if choice == "Create Profile":
         create_user_profile()
@@ -106,6 +112,11 @@ def main():
     elif choice == "Performance Tracking":
         ticker = st.sidebar.text_input("Enter a Stock Ticker", "AAPL")
         track_performance(ticker)
+
+    elif choice == "Reset Database":
+        st.warning("Warning: This will delete data permanently.")
+        if st.button("Reset Entire Database"):
+            reset_entire_database()
 
 if __name__ == "__main__":
     main()
