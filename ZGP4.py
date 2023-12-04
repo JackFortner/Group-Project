@@ -92,7 +92,7 @@ def track_performance(ticker):
 
 def main():
     st.sidebar.title("Navigation")
-    choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation", "Performance Tracking", "Investment Options"])
+    choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation","Investment Options", "Performance Tracking"])
 
     if choice == "Create Profile":
         create_user_profile()
@@ -100,12 +100,12 @@ def main():
     elif choice == "Portfolio Recommendation":
         recommend_portfolio()
 
+    elif choice ==  "Investment Options":
+        show_investment_options()
+
     elif choice == "Performance Tracking":
         ticker = st.sidebar.text_input("Enter a Stock Ticker", "AAPL")
         track_performance(ticker)
-
-    elif choice == "Investment Options":
-        show_investment_options()
 
 if __name__ == "__main__":
     main()
