@@ -69,7 +69,7 @@ def show_investment_options():
     st.write("2. Microsoft Corp. (MSFT)")
     st.write("3. Amazon.com Inc. (AMZN)")
 
-    st.subheader("ETFs")
+    st.subheader("ETFs (Exchange Traded Funds)")
     st.write("1. SPDR S&P 500 ETF Trust (SPY)")
     st.write("2. iShares Russell 2000 ETF (IWM)")
     st.write("3. Vanguard Total Stock Market ETF (VTI)")
@@ -79,7 +79,7 @@ def show_investment_options():
     st.write("2. Corporate Bonds (e.g., IBM Corp Bonds)")
     st.write("3. Municipal Bonds")
 
-    st.write("Note: These are examples of popular investment options. Please do your own research or consult with a financial advisor before investing.")
+    st.write("Note: These are examples of popular investment options")
 
 def track_performance(ticker):
     st.title("Performance Tracking")
