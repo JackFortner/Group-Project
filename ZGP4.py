@@ -55,9 +55,9 @@ def get_recommended_portfolio(risk_tolerance):
 
 def get_investment_allocation(portfolio, financial_goal, horizon):
     allocation = {
-        'Conservative': {'Bonds': 70, 'ETFs': 20, 'Stocks': 10},
-        'Moderate': {'Bonds': 40, 'ETFs': 30, 'Stocks': 30},
-        'Aggressive': {'Bonds': 10, 'ETFs': 20, 'Stocks': 70}
+        'Conservative': {'Bonds': 60, 'ETFs': 30, 'Stocks': 10},
+        'Moderate': {'Bonds': 20, 'ETFs': 50, 'Stocks': 30},
+        'Aggressive': {'Bonds': 10, 'ETFs': 30, 'Stocks': 60}
     }
 
     return pd.DataFrame(allocation[portfolio['name']], index=['% Allocation'])
