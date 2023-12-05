@@ -39,22 +39,55 @@ def recommend_portfolio():
     else:
         st.write("No profiles available. Please add user profiles.")
 
-def get_recommended_portfolio(risk_tolerance):
-    portfolios = {
+def get_recommended_portfolio(risk_tolerance, investment_horizon):
+ 
+
+    if investment_horizon == "Short-term":
+        # Prefer conservative portfolios for short-term horizons
+        if risk_tolerance <= 7:
+            return 'Conservative'
+        else:
+            return 'Moderate'
+    elif investment_horizon == "Medium-term":
+        # Balanced approach for medium-term
+        if risk_tolerance <= 4:
+            return 'Conservative'
+        elif risk_tolerance <= 7:
+            return 'Moderate'
+        else:
+            return 'Aggressive'
+    else:  # Long-term
+        # Prefer more aggressive portfolios for long-term horizons
+        if risk_tolerance <= 4:
+            return 'Moderate'
+        else:
+            return 'Aggressive'
+
+portfolios = {
         'Conservative': {'name': 'Conservative', 'risk': 2, 'return': 4},
         'Moderate': {'name': 'Moderate', 'risk': 5, 'return': 7},
         'Aggressive': {'name': 'Aggressive', 'risk': 8, 'return': 10}
     }
-    
-    if risk_tolerance <= 4:
-        return portfolios['Conservative']
-    elif 4 < risk_tolerance <= 7:
-        return portfolios['Moderate']
+
+def recommend_portfolio():
+    st.title("Portfolio Recommendation")
+    profiles = pd.read_sql('profiles', con=engine)
+
+    if not profiles.empty:
+        for _, row in profiles.iterrows():
+            user_risk_tolerance = row['risk_tolerance']
+            investment_horizon = row['investment_horizon']
+            recommended_portfolio_name = get_recommended_portfolio(user_risk_tolerance, investment_horizon)
+            recommended_portfolio = portfolios[recommended_portfolio_name]
+            investment_allocation = get_investment_allocation(recommended_portfolio, row['financial_goal'], row['investment_horizon'])
+            st.write(f"{row['name']}'s Recommended Portfolio: {recommended_portfolio['name']}")
+            st.write("Investment Allocation:")
+            st.table(investment_allocation)
     else:
-        return portfolios['Aggressive']
+        st.write("No profiles available. Please add user profiles.")
+
 
 def get_investment_allocation(portfolio, financial_goal, horizon):
-   # Define base allocations
     base_allocation = {
         'Conservative': {'Bonds': 70, 'ETFs': 20, 'Stocks': 10},
         'Moderate': {'Bonds': 40, 'ETFs': 30, 'Stocks': 30},
@@ -69,7 +102,6 @@ def get_investment_allocation(portfolio, financial_goal, horizon):
     else:  # Higher goal, more aggressive
         allocation_adjustment = {'Bonds': -10, 'ETFs': 5, 'Stocks': 5}
 
-    # Apply adjustments
     final_allocation = {
         asset: base_allocation[portfolio['name']][asset] + allocation_adjustment.get(asset, 0)
         for asset in base_allocation[portfolio['name']]
@@ -97,6 +129,8 @@ def show_investment_options():
 
     st.write("Note: These are examples of popular investment options")
 
+
+
 def track_performance(ticker):
     st.title("Performance Tracking")
     stock = yf.Ticker(ticker)
@@ -105,12 +139,14 @@ def track_performance(ticker):
     plt.plot(hist['Close'])
     plt.title("Stock Closing Price Over Time")
     st.pyplot(plt)
+
 def reset_entire_database():
     if os.path.exists("roboadvisor.db"):
         os.remove("roboadvisor.db")
         st.success("Entire database has been reset")
     else:
         st.error("Database file not found.")
+
 def main():
     st.sidebar.title("Navigation")
     choice = st.sidebar.radio("Choose a function", ["Create Profile", "Portfolio Recommendation","Investment Options", "Performance Tracking", "Reset Database"])
@@ -121,7 +157,7 @@ def main():
     elif choice == "Portfolio Recommendation":
         recommend_portfolio()
 
-    elif choice ==  "Investment Options":
+    elif choice == "Investment Options":
         show_investment_options()
 
     elif choice == "Performance Tracking":
